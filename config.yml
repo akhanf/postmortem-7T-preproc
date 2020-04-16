@@ -1,0 +1,27 @@
+bids_dir: /project/6007967/akhanf/cfmm-bids/data/Duerden/PostMortemWholeBrain7T/bids
+
+subjects:
+ - 2081
+ - 2087
+ - 2091
+
+#runs to make use of (first one will be ref run)
+use_runs:
+ '2081':
+    - 1
+    - 2
+    - 3
+ '2087':
+    - 3
+    - 4
+ '2091':
+    - 1
+    - 2
+    - 3
+
+#number of times to run N4 in sequence
+num_n4_reps:
+ '2081': 2
+ '2087': 4
+ '2091': 2
+  
