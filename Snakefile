@@ -80,7 +80,8 @@ rule mni_reg_flirt_affine:
     envmodules: 'fsl'
     log: 'logs/mni_reg_flirt/sub-{subject}.log'
     shell:
-        'flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}'
+        'if [ {input.moving} == "sub-2087/sub-2087_T2w_aligned_avg_n4correct.nii.gz" ]; then; flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -init sub-2087_reorient_tform.mat -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}; else; flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}; fi'
+
  
 #register to mni (T2w brain) template
 rule mni_reg_flirt_rigid:
@@ -93,5 +94,4 @@ rule mni_reg_flirt_rigid:
     envmodules: 'fsl'
     log: 'logs/mni_reg_flirt/sub-{subject}.log'
     shell:
-        'flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -omat {output.xfm} -dof 6 -coarsesearch 30 -finesearch 15 &> {log}'
-  
+        'if [ {input.moving} == "sub-2087/sub-2087_T2w_aligned_avg_n4correct.nii.gz" ]; then; flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -init sub-2087_reorient_tform.mat -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}; else; flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}; fi'
