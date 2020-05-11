@@ -74,25 +74,29 @@ rule mni_reg_flirt_affine:
     input:
         moving = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct.nii.gz',
         fixed = 'template/tpl-MNI152NLin2009cAsym_res-01_desc-brain_T2w.nii.gz',
-	tform = 'sub-{subject}/sub-{subject}_reorient_tform.mat'
+        tform =  lambda wildcards: 'sub-{subject}/sub-{subject}_reorient_tform.mat'.format(subject=wildcards.subject) if config['enable_custom_flirt'][wildcards.subject] else ''
+    params:
+        init = lambda wildcards, input: '-init {tform}'.format(tform=input.tform) if config['enable_custom_flirt'][wildcards.subject] else ''
     output:
         warped = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct_to-MNI152NLin2009cAsym_affine.nii.gz',
         xfm = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct_to-MNI152NLin2009cAsym_affine_xfm.mat'
     envmodules: 'fsl'
     log: 'logs/mni_reg_flirt/sub-{subject}.log'
     shell:
-        'flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -init {input.tform} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}'
+        'flirt -in {input.moving} -ref {input.fixed} -out {output.warped} {params.init} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}'
  
 #register to mni (T2w brain) template
 rule mni_reg_flirt_rigid:
     input:
         moving = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct.nii.gz',
         fixed = 'template/tpl-MNI152NLin2009cAsym_res-01_desc-brain_T2w.nii.gz',
-	tform = 'sub-{subject}/sub-{subject}_reorient_tform.mat'
+        tform =  lambda wildcards: 'sub-{subject}/sub-{subject}_reorient_tform.mat'.format(subject=wildcards.subject) if config['enable_custom_flirt'][wildcards.subject] else ''
+    params:
+        init = lambda wildcards, input: '-init {tform}'.format(tform=input.tform) if config['enable_custom_flirt'][wildcards.subject] else ''
     output:
         warped = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct_to-MNI152NLin2009cAsym_rigid.nii.gz',
         xfm = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct_to-MNI152NLin2009cAsym_rigid_xfm.mat'
     envmodules: 'fsl'
     log: 'logs/mni_reg_flirt/sub-{subject}.log'
     shell:
-        'flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -init {input.tform} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}'
+        'flirt -in {input.moving} -ref {input.fixed} -out {output.warped} {params.init} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}'

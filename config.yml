@@ -24,4 +24,11 @@ num_n4_reps:
  '2081': 2
  '2087': 4
  '2091': 2
-  
+
+
+#enable custom flirt initialization  
+enable_custom_flirt:
+ '2081': False
+ '2087': True
+ '2091': False
+
