@@ -73,25 +73,26 @@ rule nu_correct:
 rule mni_reg_flirt_affine:
     input:
         moving = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct.nii.gz',
-        fixed = 'template/tpl-MNI152NLin2009cAsym_res-01_desc-brain_T2w.nii.gz'
+        fixed = 'template/tpl-MNI152NLin2009cAsym_res-01_desc-brain_T2w.nii.gz',
+	tform = 'sub-{subject}/sub-{subject}_reorient_tform.mat'
     output:
         warped = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct_to-MNI152NLin2009cAsym_affine.nii.gz',
         xfm = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct_to-MNI152NLin2009cAsym_affine_xfm.mat'
     envmodules: 'fsl'
     log: 'logs/mni_reg_flirt/sub-{subject}.log'
     shell:
-        'if [ {input.moving} == "sub-2087/sub-2087_T2w_aligned_avg_n4correct.nii.gz" ]; then; flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -init sub-2087_reorient_tform.mat -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}; else; flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}; fi'
-
+        'flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -init {input.tform} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}'
  
 #register to mni (T2w brain) template
 rule mni_reg_flirt_rigid:
     input:
         moving = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct.nii.gz',
-        fixed = 'template/tpl-MNI152NLin2009cAsym_res-01_desc-brain_T2w.nii.gz'
+        fixed = 'template/tpl-MNI152NLin2009cAsym_res-01_desc-brain_T2w.nii.gz',
+	tform = 'sub-{subject}/sub-{subject}_reorient_tform.mat'
     output:
         warped = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct_to-MNI152NLin2009cAsym_rigid.nii.gz',
         xfm = 'sub-{subject}/sub-{subject}_T2w_aligned_avg_n4correct_to-MNI152NLin2009cAsym_rigid_xfm.mat'
     envmodules: 'fsl'
     log: 'logs/mni_reg_flirt/sub-{subject}.log'
     shell:
-        'if [ {input.moving} == "sub-2087/sub-2087_T2w_aligned_avg_n4correct.nii.gz" ]; then; flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -init sub-2087_reorient_tform.mat -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}; else; flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}; fi'
+        'flirt -in {input.moving} -ref {input.fixed} -out {output.warped} -init {input.tform} -omat {output.xfm} -dof 12 -coarsesearch 30 -finesearch 15 &> {log}'
